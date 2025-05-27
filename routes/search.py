@@ -1,17 +1,7 @@
 from fastapi.responses import JSONResponse
 from controllers import FeatureExtraction, SimilaritySearch, TextPreprocessing
 from helpers import get_settings_object, Settings
-from fastapi import APIRouter, Depends, UploadFile, status, Request, Form, File
-
-
-import torch
-import random
-import numpy as np
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
-from PIL import Image
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from fastapi import APIRouter, Depends, UploadFile, Request, Form, File
 
 search_router = APIRouter(
     prefix="/search",
