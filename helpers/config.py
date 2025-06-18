@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     - DATABASE_URL: str
     - SECRET_KEY: str
     """
-    
-    QDRANT_API_KEY: str
-    QDRANT_HOST: str
+    APP_NAME : str
+    APP_VERSION : str
+
 
     class Config:
         env_file = ".env"

@@ -1,22 +1,23 @@
-import spacy
+import re
+from fastapi import Request
 from .BaseController import BaseController
 
-
-class TextPreprocessing(BaseController):
-    def __init__(self):
+class TextPreProcessingControllers(BaseController):
+    def __init__(self, request:Request):
         super().__init__()
-    
-    def preprocess_text(self, text):
-        """
-        Use spaCy to preprocess the input text:
-        - Lowercasing
-        - Removing stopwords, punctuation, and non-alphabetic tokens
-        - Lemmatization
-        """
-        nlp = spacy.load("en_core_web_sm")
-        doc = nlp(text.lower())
+        self.request = request
+
+    def preprocess_text(
+        self,
+        text: str
+    ):
+        # Remove punctuation
+        text = re.sub(r'[^\w\s]', ' ', text)
+        # Remove extra spaces
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        doc = self.request.app.nlp(text.lower())
         tokens = [
             token.lemma_ for token in doc
-            if token.is_alpha and not token.is_stop
         ]
         return " ".join(tokens)
