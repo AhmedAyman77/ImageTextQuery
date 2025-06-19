@@ -29,8 +29,7 @@ async def startup__span():
     # create a client from qdrantDB
     app.client = QdrantClient(
         url=os.environ["QDRANT_HOST"],
-        api_key=os.environ["QDRANT_API_KEY"],
-        timeout=60.0
+        api_key=os.environ["QDRANT_API_KEY"]
     )
 
     # load spacy pipeline
