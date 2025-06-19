@@ -7,7 +7,7 @@ from routes import ImageSearch, TextSearch
 from transformers import CLIPProcessor, CLIPModel
 
 app = FastAPI()
-load_dotenv()
+# load_dotenv()
 
 # ================================================================
 # The @app.on_event("startup") is a decorator that specifies a function
@@ -21,8 +21,8 @@ load_dotenv()
 @app.on_event("startup")
 async def startup__span():
     # Load the Feature Extraction model
-    # MODEL_ID = "openai/clip-vit-base-patch32"
-    MODEL_ID = "./models/clip_model"
+    MODEL_ID = "openai/clip-vit-base-patch32"
+    # MODEL_ID = "./models/clip_model"
     app.model = CLIPModel.from_pretrained(MODEL_ID)
     app.processor = CLIPProcessor.from_pretrained(MODEL_ID)
     
