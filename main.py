@@ -23,8 +23,8 @@ async def startup__span():
     # Load the Feature Extraction model
     MODEL_ID = "openai/clip-vit-base-patch32"
     # MODEL_ID = "./models/clip_model"
-    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", from_tf=True)
+    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", from_tf=True)
     
     # create a client from qdrantDB
     app.client = QdrantClient(
