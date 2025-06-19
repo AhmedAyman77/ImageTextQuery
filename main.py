@@ -5,7 +5,6 @@ from fastapi import FastAPI
 from qdrant_client import QdrantClient
 from routes import ImageSearch, TextSearch
 from transformers import CLIPProcessor, CLIPModel
-from transformers import AutoProcessor, AutoModelForZeroShotImageClassification
 
 app = FastAPI()
 # load_dotenv()
@@ -33,8 +32,8 @@ async def startup__span():
     # Load the Feature Extraction model
     MODEL_ID = "openai/clip-vit-base-patch32"
     # MODEL_ID = "./models/clip_model"
-    processor = AutoProcessor.from_pretrained(MODEL_ID)
-    model = AutoModelForZeroShotImageClassification.from_pretrained(MODEL_ID)
+    model = CLIPModel.from_pretrained(MODEL_ID)
+    processor = CLIPProcessor.from_pretrained(MODEL_ID)
 
 
 @app.on_event("shutdown")
