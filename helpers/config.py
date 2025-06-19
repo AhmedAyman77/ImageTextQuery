@@ -9,8 +9,9 @@ class Settings(BaseSettings):
     - DATABASE_URL: str
     - SECRET_KEY: str
     """
-    APP_NAME : str
-    APP_VERSION : str
+    QDRANT_HOST: str
+    QDRANT_API_KEY: str
+
 
 
     class Config:
