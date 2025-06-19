@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Set transformers cache to avoid permission errors
-ENV TRANSFORMERS_CACHE=/app/cache
+ENV HF_HOME=/app/cache
 RUN mkdir -p /app/cache
 
 # Install Python dependencies

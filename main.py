@@ -1,6 +1,6 @@
 import os
 import spacy
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from fastapi import FastAPI
 from qdrant_client import QdrantClient
 from routes import ImageSearch, TextSearch
@@ -23,8 +23,8 @@ async def startup__span():
     # Load the Feature Extraction model
     MODEL_ID = "openai/clip-vit-base-patch32"
     # MODEL_ID = "./models/clip_model"
-    app.model = CLIPModel.from_pretrained(MODEL_ID, from_tf=True)
-    app.processor = CLIPProcessor.from_pretrained(MODEL_ID, from_tf=True)
+    model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
     
     # create a client from qdrantDB
     app.client = QdrantClient(
