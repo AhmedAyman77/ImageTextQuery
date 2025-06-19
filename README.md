@@ -21,6 +21,7 @@ A multimodal search engine that allows users to search for relevant images using
     - **description** with your search query (required)
     - **limit** with number of images you want (optional)
 
+
 ### Find similar images by uploading a reference image.   
 ### 🔸 Using Postman:
 - Set method: POST  
