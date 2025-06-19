@@ -12,6 +12,7 @@ class SimilaritySearchControllers(BaseController):
         limit: int,
     ):
         super().__init__()
+        self.request = request
         self.client = client
         self.image_features = image_features
         self.limit = limit

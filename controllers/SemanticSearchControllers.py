@@ -22,6 +22,6 @@ class SemanticSearchControllers(BaseController):
         urls_response = []
         for hit in search_res:
             idx = hit.id
-            urls_response.append(self.app.furniture[idx])
+            urls_response.append(request.app.furniture[idx])
         
         return urls_response
