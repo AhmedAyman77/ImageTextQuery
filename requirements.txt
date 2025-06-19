@@ -8,4 +8,5 @@ qdrant-client==1.14.2
 pydantic-settings==2.9.1
 python-dotenv==1.1.0
 spacy==3.7.2
+tensorflow==2.19.0
 # git+https://github.com/openai/CLIP.git
