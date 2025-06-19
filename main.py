@@ -20,6 +20,12 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup__span():
+    # Load the Feature Extraction model
+    MODEL_ID = "openai/clip-vit-base-patch32"
+    # MODEL_ID = "./models/clip_model"
+    model = CLIPModel.from_pretrained(MODEL_ID)
+    processor = CLIPProcessor.from_pretrained(MODEL_ID)
+
     # create a client from qdrantDB
     app.client = QdrantClient(
         url=os.environ["QDRANT_HOST"],
@@ -29,11 +35,6 @@ async def startup__span():
     # load spacy pipeline
     app.nlp = spacy.load("en_core_web_sm")
 
-    # Load the Feature Extraction model
-    MODEL_ID = "openai/clip-vit-base-patch32"
-    # MODEL_ID = "./models/clip_model"
-    model = CLIPModel.from_pretrained(MODEL_ID)
-    processor = CLIPProcessor.from_pretrained(MODEL_ID)
 
 
 @app.on_event("shutdown")
