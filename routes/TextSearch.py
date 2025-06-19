@@ -1,12 +1,6 @@
-
-import json
-import torch
-import torch.nn.functional as F
-from qdrant_client import QdrantClient
 from fastapi.responses import JSONResponse
 from fastapi import Form, APIRouter, Request
 from controllers import TextPreProcessingControllers, SemanticSearchControllers, FeatureExtractionControllers
-
 
 text_router = APIRouter(
     prefix="/api/v1/text",
