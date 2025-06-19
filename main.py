@@ -21,9 +21,9 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup__span():
     # Load the Feature Extraction model
-    MODEL_ID = "openai/clip-vit-base-patch32"
+    MODEL_ID = "sentence-transformers/clip-ViT-B-32"
     # MODEL_ID = "./models/clip_model"
-    model = CLIPModel.from_pretrained(MODEL_ID, from_tf=True)
+    model = CLIPModel.from_pretrained(MODEL_ID)
     processor = CLIPProcessor.from_pretrained(MODEL_ID)
     
     # create a client from qdrantDB
