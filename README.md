@@ -6,41 +6,31 @@ A multimodal search engine that allows users to search for relevant images using
 
 - **Qdrant** for store and retrieve image and text embeddings efficiently based on semantic similarity
 
-- **NLP Embeddings** Used to convert natural language text queries into high-dimensional vectors for semantic comparison with image embeddings.
+- **CLIP** Used to convert natural language text queries or image query into high-dimensional vectors.
 
-- **Computer Vision Embeddings**
-Used to extract feature vectors from images so they can be compared with text or other images in the vector space.
 
-# getting started
+# APIs
+### Search for relevant images by providing a natural language description.   
+### 🔸 Using Postman:    
+- Set method: POST    
+- Set URL: https://A7medAyman-image-text-search.hf.space/api/v1/text/TextSearchQuery
 
-1- ***Clone the repo***   
-```bash
-git clone git@github.com:AhmedAyman77/ImageTextQuery.git
-cd ImageTextQuery
-```
+ - Go to the Body tab → choose form-data
 
-2- ***create conda env***
-```bash
-conda create -n Image-Text-Query python=3.11
-```
+ - Add field:
+    - **description** with your search query (required)
+    - **limit** with number of images you want (optional)
 
-3- ***Activate the environment***
-```bash
-conda activate Image-Text-Query
-```
+### Find similar images by uploading a reference image.   
+### 🔸 Using Postman:
+- Set method: POST  
 
-4- ***Install the required packages***
-```bash
-pip install -r requirements.txt
-```
+- Set URL: https://A7medAyman-image-text-search.hf.space/api/v1/image/ImageSearchQuery
 
-5- ***run FastAPI server***
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 5000
-```
+ - Go to the Body tab → choose form-data
 
-### test Endpoints
-- you can use this endpoint for search using image  
-**http://0.0.0.0:5000/search/image**
+ - Add field:
 
-- or use this endpoint for search by writing a description about the furniture you want **http://0.0.0.0:5000/search/text**
+    - **File** upload an image file (required)
+    - **limit** number of images to return (optional)
+    - **color** filter by color (optional, e.g., "black")
