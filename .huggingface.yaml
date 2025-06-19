@@ -1,9 +1,8 @@
----
-title: Image Text Query
-emoji: 😻
-colorFrom: gray
-colorTo: green
+# .huggingface.yaml
+title: ImageTextQuery
+emoji: 🔍
+colorFrom: indigo
+colorTo: gray
 sdk: docker
-pinned: false
+app_file: Dockerfile
 license: apache-2.0
----
