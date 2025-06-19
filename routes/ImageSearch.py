@@ -55,9 +55,10 @@ async def image_search_query(
     # Search
     urls_response = []
     search_object = SimilaritySearchControllers(
-        client= client,
-        image_features= image_features,
-        limit= limit
+        request = request,
+        client = client,
+        image_features = image_features,
+        limit = limit
     )
 
     urls_response = []

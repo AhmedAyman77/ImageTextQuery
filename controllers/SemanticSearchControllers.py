@@ -1,6 +1,5 @@
 import torch
 from fastapi import Request
-from qdrant_client.http import models
 from .BaseController import BaseController
 
 class SemanticSearchControllers(BaseController):
@@ -9,6 +8,7 @@ class SemanticSearchControllers(BaseController):
 
     def search(
         self,
+        request: Request,
         client: Request,
         text_features: torch.tensor,
         limit: int,
@@ -20,13 +20,8 @@ class SemanticSearchControllers(BaseController):
         )
 
         urls_response = []
-
         for hit in search_res:
-            curr_dict = {}
-            IMAGE_URL = hit.payload["link"]
-            ID = hit.payload["id"]
-            curr_dict["image_url"] = IMAGE_URL
-            curr_dict["id"] = ID
-            urls_response.append(curr_dict)
-
+            idx = hit.id
+            urls_response.append(self.app.furniture[idx])
+        
         return urls_response

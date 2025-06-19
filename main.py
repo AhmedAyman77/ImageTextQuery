@@ -1,5 +1,6 @@
 import os
 import spacy
+import json
 # from dotenv import load_dotenv
 from fastapi import FastAPI
 from qdrant_client import QdrantClient
@@ -74,6 +75,9 @@ async def startup__span():
     
     # load spacy pipeline
     app.nlp = spacy.load("en_core_web_sm")
+
+    with open("./Furniture.json", 'r', encoding='utf-8-sig') as f:
+        app.furniture = json.load(f)
     
 
 @app.on_event("shutdown")

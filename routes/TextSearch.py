@@ -49,6 +49,7 @@ async def text_search_query(
     # Semantic search
     search_object = SemanticSearchControllers()
     urls_response = search_object.search(
+        request=request,
         client=client,
         text_features=text_features,
         limit=limit
