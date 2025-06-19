@@ -24,7 +24,9 @@ class SemanticSearchControllers(BaseController):
         for hit in search_res:
             curr_dict = {}
             IMAGE_URL = hit.payload["link"]
+            ID = hit.payload["id"]
             curr_dict["image_url"] = IMAGE_URL
+            curr_dict["id"] = ID
             urls_response.append(curr_dict)
 
         return urls_response
