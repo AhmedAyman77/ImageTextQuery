@@ -1,12 +1,15 @@
+import re
 import torch
 import torch.nn.functional as F
 from PIL import Image
-from .BaseController import BaseController
+from fastapi import Request
+from .BaseControllers import BaseControllers
 from transformers import CLIPProcessor, CLIPModel
 
-class FeatureExtractionControllers(BaseController):
-    def __init__(self):
+class FeatureExtractionControllers(BaseControllers):
+    def __init__(self, request: Request):
         super().__init__()
+        self.request = request
     
     def process_image(
         self,
@@ -19,10 +22,11 @@ class FeatureExtractionControllers(BaseController):
     
     def extract_image_features(
         self,
-        input:torch.tensor,
-        model: CLIPModel
+        image: Image,
+        model: CLIPModel,
+        processor: CLIPProcessor
     ):
-        
+        input = self.process_image(image, processor)
         with torch.no_grad():
             image_features = model.get_image_features(input)
 
@@ -31,22 +35,42 @@ class FeatureExtractionControllers(BaseController):
         image_features = F.normalize(image_features, dim=-1)
 
         return image_features
-    
 
-    def process_text(
+    def clean_text(
+        self,
+        text: str
+    ):
+        # Remove punctuation
+        text = re.sub(r'[^\w\s]', ' ', text)
+        # Remove extra spaces
+        text = re.sub(r'\s+', ' ', text).strip()
+        # Remove non-alphabetic characters
+        text = re.sub(r'[^a-zA-Z\s]', '', text)
+
+        doc = self.request.app.nlp(text.lower())
+        tokens = [
+            token.lemma_
+            for token in doc
+        ]
+        return " ".join(tokens)
+
+    def text_processor(
         self,
         description: str,
         processor: CLIPProcessor
     ):
+        description = self.clean_text(description)
         input = processor(text=description, return_tensors="pt")["input_ids"]
         
         return input
     
     def extract_text_features(
         self,
-        input:torch.tensor,
-        model: CLIPModel
+        description: str,
+        model: CLIPModel,
+        processor: CLIPProcessor
     ):
+        input = self.text_processor(description, processor)
         with torch.no_grad():
             text_features = model.get_text_features(input)
 
@@ -55,4 +79,3 @@ class FeatureExtractionControllers(BaseController):
         text_features = F.normalize(text_features, dim=-1)
         
         return text_features
-    

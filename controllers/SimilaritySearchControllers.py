@@ -1,22 +1,19 @@
 import torch
 from fastapi import Request
 from qdrant_client.http import models
-from .BaseController import BaseController
+from .BaseControllers import BaseControllers
+from .SearchControllers import SearchControllers
 
-class SimilaritySearchControllers(BaseController):
+class SimilaritySearchControllers(BaseControllers, SearchControllers):
     def __init__(
         self,
         request: Request,
-        client: Request,
-        image_features: torch.tensor,
         limit: int,
+        image_features: torch.tensor
     ):
-        super().__init__()
-        self.request = request
-        self.client = client
+        BaseControllers.__init__(self)
+        SearchControllers.__init__(self, limit=limit, request=request)
         self.image_features = image_features
-        self.limit = limit
-
 
     def simple_search(self):
         search_res = self.client.search(
@@ -25,18 +22,9 @@ class SimilaritySearchControllers(BaseController):
             limit=self.limit
         )
 
-        urls_response = []
-        for hit in search_res:
-            idx = hit.id
-            urls_response.append(self.request.app.furniture[idx])
+        return self.url_response(search_res=search_res)
 
-        return urls_response
-
-
-    def color_filter_search(
-        self,
-        color: str
-    ):
+    def color_filter_search(self, color: str):
         search_res = self.client.search(
             collection_name="image_features",
             query_vector=self.image_features[0].tolist(),
@@ -51,9 +39,4 @@ class SimilaritySearchControllers(BaseController):
             )
         )
 
-        urls_response = []
-        for hit in search_res:
-            idx = hit.id
-            urls_response.append(self.request.app.furniture[idx])
-
-        return urls_response
+        return self.url_response(search_res=search_res)

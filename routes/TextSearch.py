@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse
 from fastapi import Form, APIRouter, Request
-from controllers import TextPreProcessingControllers, SemanticSearchControllers, FeatureExtractionControllers
+from controllers import SemanticSearchControllers, FeatureExtractionControllers
 
 text_router = APIRouter(
     prefix="/api/v1/text",
@@ -24,35 +24,26 @@ async def text_search_query(
     Returns:
     - A JSON response with the search results.
     """
-    # preprocess inout text
-    processed_description = TextPreProcessingControllers(request=request).preprocess_text(description)
-    
     # Load the CLIP model and processor
     model, processor = request.app.model, request.app.processor
 
-    # Preprocess the text
-    feature_extractor = FeatureExtractionControllers()
-    input = feature_extractor.process_text(
-        description = processed_description,
-        processor = processor
-    )
-    
     # extract text features
-    text_features = feature_extractor.extract_text_features(
-        input = input,
-        model = model
+    feature_extractor = FeatureExtractionControllers(
+        request=request
     )
-
-    # qdrantDB client
-    client = request.app.client
+    text_features = feature_extractor.extract_text_features(
+        description=description,
+        model=model,
+        processor=processor
+    )
 
     # Semantic search
-    search_object = SemanticSearchControllers()
-    urls_response = search_object.search(
+    search_object = SemanticSearchControllers(
         request=request,
-        client=client,
-        text_features=text_features,
         limit=limit
+    )
+    urls_response = search_object.search(
+        text_features=text_features
     )
 
     return JSONResponse(

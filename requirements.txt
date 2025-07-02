@@ -7,6 +7,10 @@ python-multipart==0.0.17
 qdrant-client==1.14.2
 pydantic-settings==2.9.1
 python-dotenv==1.1.0
-spacy==3.7.2
-tensorflow==2.19.0
-# git+https://github.com/openai/CLIP.git
+pyodbc==5.2.0
+pymssql
+requests==2.32.4
+apscheduler==3.11.0
+pillow-avif-plugin==1.5.2
+# spacy==3.7.2
+

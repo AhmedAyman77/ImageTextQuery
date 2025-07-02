@@ -12,7 +12,11 @@ class Settings(BaseSettings):
     QDRANT_HOST: str
     QDRANT_API_KEY: str
 
-
+    SQL_PORT: int
+    SQL_HOST: str
+    SQL_USER: str
+    SQL_PASSWORD: str
+    SQL_DATABASE: str
 
     class Config:
         env_file = ".env"

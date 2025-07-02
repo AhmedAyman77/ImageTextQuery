@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 from controllers import FeatureExtractionControllers, SimilaritySearchControllers
 from fastapi import File, UploadFile, Form, APIRouter, Request
 
-
 image_router = APIRouter(
     prefix="/api/v1/image",
     tags=["api_v1", "image"],
@@ -18,7 +17,7 @@ async def image_search_query(
 ):
     """
     Endpoint to handle image search queries.
-    
+
     Parameters:
     - image: The image file to be processed.
     - limit: The number of images to return in response.
@@ -35,28 +34,21 @@ async def image_search_query(
     model, processor = request.app.model, request.app.processor
 
     # Extract input features
-    features_Extractor = FeatureExtractionControllers()
-
-    # Preprocess the image
-    input = features_Extractor.process_image(
-        image = image,
-        processor = processor
+    features_Extractor = FeatureExtractionControllers(
+        request=request
     )
-    
+
     # extract image features
     image_features = features_Extractor.extract_image_features(
-        input = input,
-        model = model
+        image=image,
+        model=model,
+        processor=processor
     )
 
-    # qdrantDB client
-    client = request.app.client
-    
     # Search
     urls_response = []
     search_object = SimilaritySearchControllers(
         request = request,
-        client = client,
         image_features = image_features,
         limit = limit
     )
@@ -67,7 +59,9 @@ async def image_search_query(
 
     else:
         urls_response = search_object.simple_search()
-
+    
+    print(urls_response)
+    print(f"----------------------------------------> {type(urls_response)}")
     return JSONResponse(
         status_code=200,
         content=urls_response
