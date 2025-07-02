@@ -60,8 +60,6 @@ async def image_search_query(
     else:
         urls_response = search_object.simple_search()
     
-    print(urls_response)
-    print(f"----------------------------------------> {type(urls_response)}")
     return JSONResponse(
         status_code=200,
         content=urls_response
