@@ -12,5 +12,4 @@ pymssql
 requests==2.32.4
 apscheduler==3.11.0
 pillow-avif-plugin==1.5.2
-# spacy==3.7.2
-
+spacy

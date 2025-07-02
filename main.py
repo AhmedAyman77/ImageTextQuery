@@ -27,56 +27,46 @@ async def startup__span():
     # Load the Feature Extraction model
     
     # Fix cache permission issues
-    # os.environ["TRANSFORMERS_CACHE"] = "/tmp/transformers_cache"
-    # os.environ["HF_HOME"] = "/tmp/hf_cache"
-    # os.environ["TRANSFORMERS_OFFLINE"] = "0"
+    os.environ["TRANSFORMERS_CACHE"] = "/tmp/transformers_cache"
+    os.environ["HF_HOME"] = "/tmp/hf_cache"
+    os.environ["TRANSFORMERS_OFFLINE"] = "0"
 
 
-    # MODEL_ID = "openai/clip-vit-base-patch32"
-    # try:
-    #     # Try PyTorch first with explicit cache settings
-    #     model = CLIPModel.from_pretrained(
-    #         MODEL_ID,
-    #         cache_dir="/tmp/transformers_cache",
-    #         force_download=True,  # Force fresh download
-    #         local_files_only=False,
-    #         trust_remote_code=True
-    #     )
-    #     processor = CLIPProcessor.from_pretrained(
-    #         MODEL_ID,
-    #         cache_dir="/tmp/transformers_cache",
-    #         force_download=True,
-    #         local_files_only=False
-    #     )
-    # except Exception as e:
-    #     try:
-    #         # Fallback to TensorFlow weights
-    #         model = CLIPModel.from_pretrained(
-    #             MODEL_ID,
-    #             from_tf=True,
-    #             cache_dir="/tmp/transformers_cache",
-    #             force_download=True,
-    #             local_files_only=False
-    #         )
-    #         processor = CLIPProcessor.from_pretrained(
-    #             MODEL_ID,
-    #             cache_dir="/tmp/transformers_cache",
-    #             force_download=True,
-    #             local_files_only=False
-    #         )
-    #     except Exception as e2:
-    #         raise e2
+    MODEL_ID = "openai/clip-vit-base-patch32"
+    try:
+        # Try PyTorch first with explicit cache settings
+        model = CLIPModel.from_pretrained(
+            MODEL_ID,
+            cache_dir="/tmp/transformers_cache",
+            force_download=True,  # Force fresh download
+            local_files_only=False,
+            trust_remote_code=True
+        )
+        processor = CLIPProcessor.from_pretrained(
+            MODEL_ID,
+            cache_dir="/tmp/transformers_cache",
+            force_download=True,
+            local_files_only=False
+        )
+    except Exception as e:
+        try:
+            # Fallback to TensorFlow weights
+            model = CLIPModel.from_pretrained(
+                MODEL_ID,
+                from_tf=True,
+                cache_dir="/tmp/transformers_cache",
+                force_download=True,
+                local_files_only=False
+            )
+            processor = CLIPProcessor.from_pretrained(
+                MODEL_ID,
+                cache_dir="/tmp/transformers_cache",
+                force_download=True,
+                local_files_only=False
+            )
+        except Exception as e2:
+            raise e2
 
-    MODEL_ID = "./models/clip_model"
-    model = CLIPModel.from_pretrained(
-        MODEL_ID,
-        local_files_only=True,
-        trust_remote_code=True
-    )
-    processor = CLIPProcessor.from_pretrained(
-        MODEL_ID,
-        local_files_only=True
-    )
     # Store in app for access in routes
     app.model = model
     app.processor = processor
