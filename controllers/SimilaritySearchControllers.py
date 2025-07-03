@@ -15,16 +15,16 @@ class SimilaritySearchControllers(BaseControllers, SearchControllers):
         SearchControllers.__init__(self, limit=limit, request=request)
         self.image_features = image_features
 
-    def simple_search(self):
+    async def simple_search(self):
         search_res = self.client.search(
             collection_name="image_features",
             query_vector=self.image_features[0].tolist(),
             limit=self.limit
         )
 
-        return self.url_response(search_res=search_res)
+        return await self.url_response(search_res=search_res)
 
-    def color_filter_search(self, color: str):
+    async def color_filter_search(self, color: str):
         search_res = self.client.search(
             collection_name="image_features",
             query_vector=self.image_features[0].tolist(),
@@ -39,4 +39,4 @@ class SimilaritySearchControllers(BaseControllers, SearchControllers):
             )
         )
 
-        return self.url_response(search_res=search_res)
+        return await self.url_response(search_res=search_res)

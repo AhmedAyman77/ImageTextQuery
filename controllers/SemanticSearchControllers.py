@@ -12,7 +12,7 @@ class SemanticSearchControllers(BaseControllers, SearchControllers):
         BaseControllers.__init__(self)
         SearchControllers.__init__(self, limit=limit, request=request)
     
-    def search(
+    async def search(
         self,
         text_features: torch.tensor
     ):
@@ -22,4 +22,4 @@ class SemanticSearchControllers(BaseControllers, SearchControllers):
             limit = self.limit
         )
 
-        return self.url_response(search_res=search_res)
+        return await self.url_response(search_res=search_res)

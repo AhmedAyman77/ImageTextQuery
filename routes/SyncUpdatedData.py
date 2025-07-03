@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Request
 from qdrant_client.http import models
 from controllers import SQLDatabaseControllers
@@ -8,9 +9,13 @@ sync_data_router = APIRouter(
     tags=["api_v1", "update"],
 )
 
+scheduler = BackgroundScheduler()
+scheduler_started = False
+
 
 @sync_data_router.post("/RecreateCollection")
-def recreate_collections(request: Request):
+async def recreate_collections(request: Request):
+    # Recreate Qdrant collections
     request.app.client.recreate_collection(
         collection_name="image_features",
         vectors_config=models.VectorParams(size=512, distance=models.Distance.COSINE),
@@ -25,36 +30,51 @@ def recreate_collections(request: Request):
         vectors_config=models.VectorParams(size=512, distance=models.Distance.COSINE),
     )
 
-    SQLDatabaseControllers(
+    # Create controller and sync
+    await SQLDatabaseControllers(
         request=request,
         is_collections_recreated=True
     ).sync_data()
 
-    return {
-        "status": "Collections Recreated",
-    }
+    return {"status": "Collections Recreated"}
+
+
 
 
 @sync_data_router.post("/SyncData")
-def manual_update(request: Request):
-    SQLDatabaseControllers(
+async def manual_update(request: Request):
+
+    await SQLDatabaseControllers(
         request=request,
         is_collections_recreated=False
     ).sync_data()
 
-    return {
-        "status": "Triggered sync from API"
-    }
+    return {"status": "Triggered sync from API"}
+
+
+
+
+# Wrap async sync in a thread-safe job for scheduler
+def sync_job_wrapper(request: Request):
+    loop = asyncio.get_event_loop()
+    loop.create_task(run_sync(request))
+
+async def run_sync(request: Request):
+    obj = SQLDatabaseControllers(
+        request=request,
+        is_collections_recreated=False
+    )
+    await obj.sync_data()
 
 
 @sync_data_router.post("/start_scheduler")
-def Database_scheduler(request: Request):
-    # Scheduler to run every 10 minutes
-    scheduler = BackgroundScheduler()
-    sync_updated_furniture = SQLDatabaseControllers(
-        request=request, 
-        is_collections_recreated=False
-    ).sync_data()
-    scheduler.add_job(sync_updated_furniture, 'interval', minutes=10)
+async def start_scheduler(request: Request):
+    global scheduler_started
+    if scheduler_started:
+        return {"status": "Scheduler already running"}
+
+    scheduler.add_job(sync_job_wrapper, 'interval', minutes=10, args=[request])
     scheduler.start()
-    
+    scheduler_started = True
+
+    return {"status": "Scheduler started (every 10 minutes)"}

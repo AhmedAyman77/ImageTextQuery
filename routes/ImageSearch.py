@@ -55,10 +55,10 @@ async def image_search_query(
 
     urls_response = []
     if color:
-        urls_response = search_object.color_filter_search(color = color)
+        urls_response = await search_object.color_filter_search(color = color)
 
     else:
-        urls_response = search_object.simple_search()
+        urls_response = await search_object.simple_search()
     
     return JSONResponse(
         status_code=200,

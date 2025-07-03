@@ -42,7 +42,7 @@ async def text_search_query(
         request=request,
         limit=limit
     )
-    urls_response = search_object.search(
+    urls_response = await search_object.search(
         text_features=text_features
     )
 
